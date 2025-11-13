@@ -1,0 +1,11 @@
+.venv
+.vscode
+__pycache__/
+*.pyc
+db.sqlite3
+media/
+.env
+*.log
+*.egg-info/
+migrations/
+env.txt

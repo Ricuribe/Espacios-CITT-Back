@@ -1,0 +1,15 @@
+nombre de usuario - rol
+contraseña
+
+fel.diazr  - estudiante
+olasoyfelipe
+
+j.villablancam  - profe
+youcantseeme
+
+ro.alvarezp - profe
+generalhux
+
+ben.munoz  - estudiante
+olasoyweko
+

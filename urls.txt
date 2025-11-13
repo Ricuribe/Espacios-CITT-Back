@@ -1,0 +1,20 @@
+(anteponer api/schedule/)
+
+workspaces/{id}
+schedules/                  POST
+schedules/{id}
+schedules/{id}/details      
+schedules/user/{id_user}
+user/login                  POST
+
+(anteponer api/event/)
+
+events/
+future-activity/ (para obtener todos los agendamientos y ver disponibilidad de todos los dias)
+future-activity/{id_workspace} (para obtener los agendamientos de un espacio en específico + eventos)
+
+(anteponer api/)
+
+memos/memories/
+memos/{id}/
+memos/download/{id}/

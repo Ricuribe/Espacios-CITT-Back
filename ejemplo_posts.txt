@@ -1,0 +1,52 @@
+EJEMPLO DE CÓMO SE DEBEN ENVIAR LOS DATOS
+EN CADA LINK PARA ENVIAR (POST)
+
+ASUMIENDO QUE CADA LINK TIENE PUESTO ANTES EL http://127.0.0.1:8000
+
+... = localhost:8000 o 127.0.0.1:8000
+Agendar hora (... /api/schedule/schedules) (Deprecated)
+
+{
+    "user": 1,
+    "title": "Reunión de planificación",
+    "start_time": "2025-10-28T09:00:00:00",
+    "end_time": "2025-10-28T10:29:00:00",
+    "workspace": 3,
+    "status": 1,
+    "detail": {
+        "team": "Equipo Backend",
+        "attendees": 4,
+        "project": "Plataforma de agendamiento",
+        "description": "Definición de tareas y revisión de dependencias"
+    }
+}
+
+--- Fake Login (Temporal) (... /api/user/login) ---
+
+{
+    "username": "fel.diazr",
+    "password": "olasoyfelipe"
+}
+
+--- eventos (... /api/event/events/ ) ---
+
+{
+    "title": "Evento bacan",
+    "start_datetime": "2025-11-15T10:00:00",
+    "end_datetime": "2025-11-15T10:59:00",
+    "created_by": 1,
+    "create_invitation": true,
+    "detail": {
+        "attendees": 1,
+        "description": "evento de como hacerse invisible con el empresario" 
+    },
+    "spaces": [1]
+}
+
+**Entiendase por 1 como el id_user (o el id del usuario)
+(poner true si el usuario selecciona que quiere crear una invitación al evento, 
+de lo contrario, poner false o no colocar el el campo create_invitation)
+
+NOTA: ASEGURARSE DE QUE LA HORA ANTES DE ENVIARSE NO TENGA NADA DESPUÉS, 
+RESULTANDO EN COSAS COMO "2024-11-13T16:00:00:00-03:00" O "2024-11-13T16:00:00:00Z",
+O LA HORA SE ADELANTARÁ O ATRASARÁ PORQUE EL BACKEND LEE LAS ZONAS HORARIAS
