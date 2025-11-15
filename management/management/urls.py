@@ -19,7 +19,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Las apps están instaladas como paquetes top-level (ver INSTALLED_APPS),
-    # por ello incluir sus urls por nombre de app en vez de prefijar 'management.'.
+    path('api/', include('management_service.urls')),
     path('api/', include('my_schedule_service.urls')),
 ]

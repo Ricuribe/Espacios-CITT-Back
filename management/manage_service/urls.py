@@ -8,6 +8,6 @@ router = DefaultRouter()
 router.register(r'workspaces', WorkspaceViewSet, basename='workspace')
 
 urlpatterns = [
-    path('schedule/', include(router.urls)),
+    path('manage/', include(router.urls)),
     path('user/login/', UserLoginView.as_view(), name='user-login'),
 ]

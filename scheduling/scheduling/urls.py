@@ -22,7 +22,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('schedule_service.urls')),
     path('api/', include('events_service.urls')),
 ]
 

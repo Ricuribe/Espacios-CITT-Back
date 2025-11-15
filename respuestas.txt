@@ -1,0 +1,35 @@
+future-activity/ (con all=true) (con espacios especificos devuelve lo mismo)
+{
+    "events": [
+        {
+            "id_event": 5,
+            "title": "Evento bacan",
+            "start_datetime": "2025-11-15T00:00:00",
+            "end_datetime": "2025-11-15T00:00:00",
+            "created_by": 1,
+            "created_by_username": "admin",
+            "form_public_link": null,
+            "form_edit_link": null
+        },
+        {
+            "id_event": 9,
+            "title": "Evento bacan",
+            "start_datetime": "2025-11-15T00:00:00",
+            "end_datetime": "2025-11-15T00:00:00",
+            "created_by": 1,
+            "created_by_username": "admin",
+            "form_public_link": null,
+            "form_edit_link": null
+        },
+        {
+            "id_event": 10,
+            "title": "Evento bacan",
+            "start_datetime": "2025-11-15T00:00:00",
+            "end_datetime": "2025-11-15T00:00:00",
+            "created_by": 1,
+            "created_by_username": "admin",
+            "form_public_link": null,
+            "form_edit_link": null
+        },
+    ]
+}

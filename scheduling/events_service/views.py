@@ -118,28 +118,30 @@ class EventViewSet(viewsets.ModelViewSet):
 # @permission_classes([IsAuthenticated])
 def get_future_activity(request):
     now = timezone.now()
-    # Referenciar request para evitar la advertencia de "request no accedido"
-    _ = request
-
-    #Traer eventos futuros o activos
+    
+    # Traer eventos futuros o activos
     events = Event.objects.filter(
         Q(start_datetime__gte=now) | Q(end_datetime__gte=now)
-    ).order_by('start_datetime')
-
-    return Response({
-        'events': EventSerializer(events, many=True).data
-    })
-@api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def get_future_activity_by_workspace(request, workspace_id):
-    #! ENDPOINT AÚN EN DESARROLLO, DEBE OBTEJER LOS AGENDAMIENTOS DE LOS ESPACIOS SELECCIONADOS
-    now = timezone.now()
-    # Referenciar request para evitar la advertencia de "request no accedido"
-    _ = request
-
-    events = Event.objects.filter(
-        Q(start_datetime__gte=now) | Q(end_datetime__gte=now)
-    ).order_by('start_datetime')
+    )
+    
+    # Filtrar por espacios si se proporcionan (no si all=true)
+    all_events = request.query_params.get('all', 'false').lower() == 'true'
+    
+    if not all_events:
+        spaces_param = request.query_params.get('spaces', '')
+        if spaces_param:
+            try:
+                space_ids = [int(space_id.strip()) for space_id in spaces_param.split(',') if space_id.strip()]
+                if space_ids:
+                    # Filtrar eventos que tengan al menos uno de los espacios solicitados
+                    events = events.filter(eventspace__workspace_id__in=space_ids).distinct()
+            except (ValueError, AttributeError):
+                return Response(
+                    {"error": "El parámetro 'spaces' debe ser una lista de IDs separados por comas."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+    
+    events = events.order_by('start_datetime')
 
     return Response({
         'events': EventSerializer(events, many=True).data

@@ -58,6 +58,13 @@ class Memoria(models.Model):
     )
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'memorias'
+        verbose_name = 'Memoria'
+        verbose_name_plural = 'Memorias'
 
     def save(self, *args, **kwargs):
         """
@@ -120,7 +127,12 @@ class MemoriaDetalle(models.Model):
     )
     nombre_estudiante = models.CharField(max_length=30)
     apellido_estudiante = models.CharField(max_length=30, blank=True, null=True)
-    linkedin = models.CharField(max_length=200, blank=True)
+    linkedin = models.URLField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        db_table = 'memorias_detalles'
+        verbose_name = 'Detalle de Memoria'
+        verbose_name_plural = 'Detalles de Memorias'
 
     def __str__(self):
         return f"{self.nombre_estudiante} {self.apellido_estudiante or ''}".strip()
