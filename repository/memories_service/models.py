@@ -6,8 +6,21 @@ from django.core.files.storage import default_storage
 
 # --- validador personalizado ---
 def validar_pdf(value):
+    """
+    Valida si el archivo es un PDF.
+    """
     if not value.name.lower().endswith('.pdf'):
         raise ValidationError('Solo se permiten archivos en formato PDF.')
+
+def validar_rut(value):
+    """
+    Validador simple para RUT.
+    
+    """
+    import re
+    pattern = r'^\d{1,2}\.\d{3}\.\d{3}-[0-9kK]$|^\d{7,8}-[0-9kK]$'
+    if not re.match(pattern, value):
+        raise ValidationError('El RUT no tiene un formato válido.')
     
 @deconstructible
 class RenamePDFPath:
@@ -39,6 +52,13 @@ class RenameImagePath:
         else:
             filename = f"memoimg_temp.{ext}"
         return os.path.join("memo_images/", filename)
+    
+class CareerChoices(models.TextChoices):
+    INGENIERIA_EN_INFORMATICA = 'INGINFO', 'Ingeniería en Informática'
+    TECNICO_ANALISTA_PROGRAMADOR = 'TAP', 'Técnico Analista Programador'
+    TECNICO_REDES_Y_TELECOMUNICACIONES = 'TRT', 'Técnico en Redes y Telecomunicaciones'
+    INGENIERIA_EN_TELECOMUNICACIONES = 'INGTEL', 'Ingeniería en Redes y Telecomunicaciones'
+
 
 # --- modelo principal ---
 class Memoria(models.Model):
@@ -46,7 +66,11 @@ class Memoria(models.Model):
     titulo = models.CharField(max_length=100)
     fecha_subida = models.DateTimeField(auto_now_add=True)
     profesor = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=1000)
+    descripcion = models.TextField()
+    carrera = models.CharField(
+        max_length=50,
+        choices=CareerChoices.choices
+    )
     loc_disco = models.FileField(
         upload_to=RenamePDFPath(),
         validators=[validar_pdf]
@@ -125,8 +149,11 @@ class MemoriaDetalle(models.Model):
         on_delete=models.CASCADE,
         related_name='detalles'
     )
+    rut_estudiante = models.CharField(max_length=12 , validators=[validar_rut])
     nombre_estudiante = models.CharField(max_length=30)
-    apellido_estudiante = models.CharField(max_length=30, blank=True, null=True)
+    apellido_estudiante = models.CharField(max_length=30)
+    segundo_nombre_estudiante = models.CharField(max_length=30, blank=True, null=True)
+    segundo_apellido_estudiante = models.CharField(max_length=30, blank=True, null=True)
     linkedin = models.URLField(max_length=200, blank=True, null=True)
 
     class Meta:
