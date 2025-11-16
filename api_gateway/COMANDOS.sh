@@ -12,6 +12,7 @@ source /c/Dev/CITTEsp-back/.venv/Scripts/activate
 pip install -r requirements.txt
 
 # Aplicar migraciones
+# Cambiar ruta según ubicación del proyecto
 cd /c/Dev/CITTEsp-back/api_gateway
 python manage.py migrate
 
@@ -151,9 +152,6 @@ pip freeze > requirements.txt
 # ============================================================================
 # VARIABLES DE ENTORNO (PRODUCCIÓN)
 # ============================================================================
-
-# Copiar template
-cp .env.example .env
 
 # Editar .env con tus valores
 # Luego en settings.py:

@@ -9,4 +9,5 @@ media/
 *.egg-info/
 migrations/
 env.txt
+users.txt
 docs/
