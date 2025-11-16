@@ -2,7 +2,18 @@
 
 Backend del proyecto "Gestión de espacios y repositorio de memorias CITT"
 
-### Tener instalado PostgreSQL 18 antes de ejecutar el backend
+## 📚 Documentación
+
+**[👉 Ve a la carpeta `docs/` para la documentación completa](docs/INDEX.md)**
+
+Toda la documentación, guías, ejemplos y arquitectura está organizada en la carpeta `docs/`.
+Comienza con [docs/START.md](docs/START.md) si es tu primer contacto.
+
+---
+
+## ⚙️ Requisitos Previos
+
+Tener instalado **PostgreSQL 18** antes de ejecutar el backend
 
 Dentro de la carpeta del proyecto:
 

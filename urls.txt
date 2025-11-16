@@ -1,9 +1,14 @@
+----- Management Backend -----
+
 (anteponer api/manage/)
 
 workspaces/{id}
    
 user/{id_user}
 user/login                  POST
+
+
+----- Scheduling Backend -----
 
 (anteponer api/event/)
 
@@ -13,8 +18,16 @@ events/{id}/details
 future-activity/ (para obtener todos los agendamientos y ver disponibilidad de todos los dias)
 future-activity/q?all={true o false}&spaces={id_space} (para obtener los agendamientos de uno o varios espacios en específico)
 
+----- Repository Backend -----
+
 (anteponer api/)
 
 memos/memories/
 memos/{id}/
 memos/download/{id}/
+
+----- NOTAS ADICIONALES -----
+Para evitar configuraciones engorrosas y optimizar tiempo, en el Api_Gateway
+hay que poner el primer bloque slash 2 veces al realizar solicitudes,
+(por ejemplo, en vez de localhost:xxx/api/event/events,
+ el enlace quedaría como localhost:xxx/api/event/event/events)

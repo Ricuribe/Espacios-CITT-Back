@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'core',
     'my_schedule_service',
+    'manage_service',
 ]
 
 MIDDLEWARE = [
