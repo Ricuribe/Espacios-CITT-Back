@@ -162,4 +162,4 @@ class MemoriaDetalle(models.Model):
         verbose_name_plural = 'Detalles de Memorias'
 
     def __str__(self):
-        return f"{self.nombre_estudiante} {self.apellido_estudiante or ''}".strip()
+        return f"{self.rut_estudiante} {self.nombre_estudiante} {self.apellido_estudiante}".strip()
