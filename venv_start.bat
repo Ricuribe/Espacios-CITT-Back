@@ -1,0 +1,1 @@
+C:\Dev\CITTEsp-back\.venv\Scripts\activate

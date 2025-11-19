@@ -18,8 +18,9 @@ class Workspace(BaseModel, models.Model):
     space_type = models.CharField(max_length=50, db_column='tipo_espacio', verbose_name='Tipo de espacio')
     description = models.TextField(db_column='descripcion', verbose_name='Descripción')
     max_occupancy = models.IntegerField(db_column='aforo_maximo', verbose_name='Aforo máximo')
-    zone_space = models.CharField(max_length=2, choices=Zona.choices, db_column='zona_espacio', verbose_name='Zona del espacio')
-
+    zone_space = models.CharField(max_length=2, choices=Zona.choices, unique=True, db_column='zona_espacio', verbose_name='Zona del espacio')
+    enabled = models.BooleanField(default=True, db_column='habilitado', verbose_name='¿Habilitado?')
+    
     class Meta:
         db_table = 'espacios'
         verbose_name = 'Espacio'
