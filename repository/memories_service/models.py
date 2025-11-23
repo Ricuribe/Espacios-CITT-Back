@@ -4,7 +4,7 @@ import os
 from django.utils.deconstruct import deconstructible
 from django.core.files.storage import default_storage
 
-# --- validador personalizado ---
+
 def validar_pdf(value):
     """
     Valida si el archivo es un PDF.
@@ -60,7 +60,12 @@ class CareerChoices(models.TextChoices):
     INGENIERIA_EN_TELECOMUNICACIONES = 'INGTEL', 'Ingeniería en Redes y Telecomunicaciones'
 
 
-# --- modelo principal ---
+class EscuelaChoices(models.TextChoices):
+    INFORMATICA_TELECOMUNICACIONES = 'IT', 'Escuela de Informática y Telecomunicaciones'
+    ELECTRONICA_Y_ELECTRICA = 'EE', 'Escuela de Electrónica y Eléctrica'
+    MECANICA = 'ME', 'Escuela de Mecánica'
+    
+
 class Memoria(models.Model):
     id_memo = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=100)
@@ -68,8 +73,12 @@ class Memoria(models.Model):
     profesor = models.CharField(max_length=100)
     descripcion = models.TextField()
     carrera = models.CharField(
-        max_length=50,
+        max_length=150,
         choices=CareerChoices.choices
+    )
+    escuela = models.CharField(
+        max_length=50,
+        choices=EscuelaChoices.choices,
     )
     loc_disco = models.FileField(
         upload_to=RenamePDFPath(),
@@ -80,6 +89,9 @@ class Memoria(models.Model):
         blank=True,
         null=True
     )
+    entidad_involucrada = models.CharField(max_length=100)
+    tipo_entidad = models.CharField(max_length=50)
+    tipo_memoria = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -162,4 +174,4 @@ class MemoriaDetalle(models.Model):
         verbose_name_plural = 'Detalles de Memorias'
 
     def __str__(self):
-        return f"{self.rut_estudiante} {self.nombre_estudiante} {self.apellido_estudiante}".strip()
+        return f"{self.id_memo.id_memo} - {self.rut_estudiante} {self.nombre_estudiante} {self.apellido_estudiante}".strip()

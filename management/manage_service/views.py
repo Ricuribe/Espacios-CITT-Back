@@ -36,3 +36,4 @@ class WorkspaceViewSet(viewsets.ViewSet):
         data["resources"] = resources_serializer.data
 
         return Response(data)
+
