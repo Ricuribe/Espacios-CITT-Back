@@ -6,10 +6,10 @@ from .workspace import Workspace
 class StatusEvent(models.IntegerChoices):
     CANCELL = 0, 'Cancelado'
     AGENDED = 1, 'Agendado'
-    ACCEPT = 2, 'Aceptada'
-    CONFIRMED = 3, 'Realizada'
-    UNVISITED = 4, 'No asistida'
-    REJECT = 5, 'Rechazada'
+    CONFIRMED = 2, 'Confirmado'
+    IN_COURSE = 3, 'En curso'
+    COMPLETED = 4, 'Realizado'
+    REJECT = 5, 'Rechazado'
 
 class Event(BaseModel, models.Model):
     id_event = models.AutoField(primary_key=True, db_column='id_evento')
