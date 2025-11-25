@@ -53,17 +53,63 @@ class RenameImagePath:
             filename = f"memoimg_temp.{ext}"
         return os.path.join("memo_images/", filename)
     
-class CareerChoices(models.TextChoices):
-    INGENIERIA_EN_INFORMATICA = 'INGINFO', 'Ingeniería en Informática'
-    TECNICO_ANALISTA_PROGRAMADOR = 'TAP', 'Técnico Analista Programador'
-    TECNICO_REDES_Y_TELECOMUNICACIONES = 'TRT', 'Técnico en Redes y Telecomunicaciones'
-    INGENIERIA_EN_TELECOMUNICACIONES = 'INGTEL', 'Ingeniería en Redes y Telecomunicaciones'
-
 
 class EscuelaChoices(models.TextChoices):
     INFORMATICA_TELECOMUNICACIONES = 'IT', 'Escuela de Informática y Telecomunicaciones'
-    ELECTRONICA_Y_ELECTRICA = 'EE', 'Escuela de Electrónica y Eléctrica'
-    MECANICA = 'ME', 'Escuela de Mecánica'
+    TURISMO_HOSPITALIDAD = 'TH', 'Escuela de Turismo y Hospitalidad'
+    ADMINISTRACION_NEGOCIOS = 'AN', 'Escuela de Administración y Negocios'
+    INGENIERIA_RECURSOS_NATURALES = 'IRN', 'Escuela de Ingeniería y Recursos Naturales'
+    SALUD_BIENESTAR = 'SB', 'Escuela de Salud y Bienestar'
+    CONSTRUCCION = 'CON', 'Escuela de Construcción'
+
+
+class CareerChoices(models.TextChoices):
+    # Escuela de Informática y Telecomunicaciones
+    INGENIERIA_EN_INFORMATICA = 'INGINFO', 'Ingeniería en Informática'
+    ANALISTA_PROGRAMADOR = 'AP', 'Analista Programador'
+    INGENIERIA_RED_TELECOM = 'INGRT', 'Ingeniería en Redes y Telecomunicaciones'
+
+    # Escuela de Turismo y Hospitalidad
+    TURISMO_DESTINOS = 'TDES', 'Administración en Turismo y Hospitalidad Mención Gestión de Destinos Turísticos'
+    TURISMO_ECOTURISMO = 'TECOT', 'Administración en Turismo y Hospitalidad Mención Gestión para el Ecoturismo'
+    TURISMO_HOTELERA = 'THOT', 'Administración en Turismo y Hospitalidad Mención Administración Hotelera'
+
+    # Escuela de Administración y Negocios
+    ING_MARKETING_DIGITAL = 'IMD', 'Ingeniería en Marketing Digital'
+    CONTABILIDAD_TRIBUTARIA = 'CONTTRI', 'Contabilidad General Mención Legislación Tributaria'
+    AUDITORIA = 'AUD', 'Auditoría'
+    COMERCIO_EXTERIOR = 'COMEX', 'Comercio Exterior'
+    ING_GESTION_LOGISTICA = 'INGLOG', 'Ingeniería en Gestión Logística'
+    ING_COMERCIO_EXTERIOR = 'INGCOMEX', 'Ingeniería en Comercio Exterior'
+    ING_ADMIN_GESTION_PERSONAS = 'INGGP', 'Ingeniería en Administración Mención Gestión de Personas'
+    ING_ADMIN_EMPRENDIMIENTO = 'INGEMP', 'Ingeniería en Administración Mención Innovación y Emprendimiento'
+    ING_ADMIN_FINANZAS = 'INGFIN', 'Ingeniería en Administración Mención Finanzas'
+    TEC_GESTION_LOGISTICA = 'TLOG', 'Técnico en Gestión Logística'
+
+    # Escuela de Ingeniería y Recursos Naturales
+    TEC_ELECTRICIDAD = 'TELEC', 'Técnico en Electricidad y Automatización Industrial'
+    ING_MAQUINARIA_PESADA = 'IMP', 'Ingeniería en Maquinaria y Vehículos Pesados'
+    ING_ELECTRICIDAD = 'INGELEC', 'Ingeniería en Electricidad y Automatización Industrial'
+    ING_AGRICOLA = 'INGAGRI', 'Ingeniería Agrícola'
+    ING_MEDIO_AMBIENTE = 'INGMA', 'Ingeniería en Medio Ambiente'
+    ING_MECANICA_AUTOMOTRIZ = 'INGAUTO', 'Ingeniería en Mecánica Automotriz y Autotrónica'
+    TEC_AGRICOLA = 'TAGRI', 'Técnico Agrícola'
+    TEC_VETERINARIO = 'TVET', 'Técnico Veterinario y Pecuario'
+    TEC_MECANICA_AUTOMOTRIZ = 'TAUTO', 'Técnico en Mecánica Automotriz y Autotrónica'
+    TEC_MAQUINARIA_PESADA = 'TMP', 'Técnico en Maquinaria y Vehículos Pesados'
+
+    # Escuela de Salud y Bienestar
+    PREPARADOR_FISICO = 'PF', 'Preparador Físico'
+    TEC_LABORATORIO_CLINICO = 'TLC', 'Técnico de Laboratorio Clínico y Banco de Sangre'
+    TEC_ENFERMERIA = 'TENF', 'Técnico de Enfermería'
+    TEC_QUIMICA_FARMACIA = 'TQF', 'Técnico en Química y Farmacia'
+    TEC_ODONTOLOGIA = 'TODON', 'Técnico en Odontología'
+
+    # Escuela de Construcción
+    ING_CONSTRUCCION = 'INGCON', 'Ingeniería en Construcción'
+    ING_PREVENCION_RIESGOS = 'INGPR', 'Ingeniería en Prevención de Riesgos'
+    TEC_CONSTRUCCION = 'TCON', 'Técnico en Construcción'
+
     
 
 class Memoria(models.Model):
