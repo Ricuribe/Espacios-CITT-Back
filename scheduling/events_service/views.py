@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from core.models import Event, Workspace, EventSpace
+from core.models import Event, Workspace, EventSpace, StatusEvent
 from core.serializers import EventSerializer, EventDetailSerializer, EventSpaceSerializer
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -100,7 +100,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "Error al generar invitación"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-#! /user/{user_id}
+    #! /user/{user_id}
     @action(detail=False, methods=['get'], url_path='user/(?P<user_id>[^/.]+)')
     def by_user(self, request, user_id=None):
         User = get_user_model()
@@ -146,3 +146,54 @@ def get_future_activity(request):
     return Response({
         'events': EventSerializer(events, many=True).data
     })
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def get_scheduled_events(request):
+    """
+    Obtiene eventos con status AGENDED, CONFIRMED e IN_COURSE.
+    
+    Parámetros:
+    - today (bool): Si es true, obtiene solo eventos del día actual (que empiecen hoy, estén en curso o terminen hoy).
+                    Si es false, obtiene todos los eventos futuros exceptuando IN_COURSE (a menos que estén activos).
+    """
+    now = timezone.now()
+    today = request.query_params.get('today', 'false').lower() == 'true'
+    
+    # Definir los estados permitidos
+    allowed_statuses = [
+        StatusEvent.AGENDED,      # 1
+        StatusEvent.CONFIRMED,    # 2
+        StatusEvent.IN_COURSE     # 3
+    ]
+    
+    if today:
+        # Filtrar solo eventos del día actual
+        # Incluye: eventos que empiezan hoy, están en curso, o terminan hoy
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = today_start.replace(hour=23, minute=59, second=59, microsecond=999999)
+        
+        events = Event.objects.filter(
+            Q(status__in=allowed_statuses) &
+            (
+                Q(start_datetime__date=today_start.date()) |  # Empieza hoy
+                Q(end_datetime__date=today_start.date()) |    # Termina hoy
+                (Q(start_datetime__lte=now) & Q(end_datetime__gte=now))  # En curso
+            )
+        )
+    else:
+        # Filtrar eventos futuros:
+        # - AGENDED y CONFIRMED: cuya fecha de inicio sea mayor a hoy
+        # - IN_COURSE: cuya fecha de término aún no haya pasado
+        events = Event.objects.filter(
+            Q(status__in=[StatusEvent.AGENDED, StatusEvent.CONFIRMED], start_datetime__gte=now) |
+            Q(status=StatusEvent.IN_COURSE, end_datetime__gte=now)
+        )
+    
+    events = events.order_by('start_datetime')
+
+    return Response({
+        'events': EventSerializer(events, many=True).data
+    })
+
