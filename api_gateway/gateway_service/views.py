@@ -15,7 +15,7 @@ from .serializers import UserLoginSerializer, UserRegisterSerializer, UserSerial
 
 class LoginView(APIView):
     """
-    Login endpoint that returns JWT tokens.
+    Endpoint de inicio de sesión que devuelve tokens JWT.
     """
     permission_classes = [AllowAny]
 
@@ -36,7 +36,7 @@ class LoginView(APIView):
 
 class RegisterView(APIView):
     """
-    Register endpoint to create new users.
+    Endpoint de registro para crear nuevos usuarios.
     """
     permission_classes = [AllowAny]
 
@@ -57,7 +57,7 @@ class RegisterView(APIView):
 
 class UserDetailView(APIView):
     """
-    Get current user details.
+    Obtener los detalles del usuario actual.
     """
     permission_classes = [IsAuthenticated]
 
@@ -68,7 +68,7 @@ class UserDetailView(APIView):
 
 class LogoutView(APIView):
     """
-    Logout endpoint that invalidates the refresh token.
+    Endpoint de cierre de sesión que invalida el token de refresco.
     """
     permission_classes = [IsAuthenticated]
 
@@ -107,15 +107,15 @@ class LogoutView(APIView):
 
 def forward_request_to_backend(request, base_url, path):
     """
-    Generic function to forward requests to backend services.
-    
+    Función genérica para reenviar solicitudes a servicios backend.
+
     Args:
-        request: Django request object
-        base_url: Base URL of the backend service
-        path: Relative path to forward
-        
+        request: objeto request de Django
+        base_url: URL base del servicio backend
+        path: ruta relativa a reenviar
+
     Returns:
-        Response object with forwarded data or error message
+        Objeto Response con los datos reenviados o un mensaje de error
     """
     url = f"{base_url}/{path}".rstrip('/')
     
@@ -189,8 +189,8 @@ def forward_request_to_backend(request, base_url, path):
 
 class ManagementProxyView(APIView):
     """
-    Proxy for management service endpoints.
-    Forwards requests to the management service at MANAGEMENT_SERVICE_URL.
+    Proxy para los endpoints del servicio de gestión.
+    Reenvía las solicitudes al servicio de gestión definido en MANAGEMENT_SERVICE_URL.
     """
     permission_classes = [IsAuthenticated]
 
@@ -221,8 +221,8 @@ class ManagementProxyView(APIView):
 
 class RepositoryProxyView(APIView):
     """
-    Proxy for repository service endpoints.
-    Forwards requests to the repository service at REPOSITORY_SERVICE_URL.
+    Proxy para los endpoints del servicio de repositorio.
+    Reenvía las solicitudes al servicio de repositorio definido en REPOSITORY_SERVICE_URL.
     """
     permission_classes = [IsAuthenticated]
 
@@ -253,15 +253,37 @@ class RepositoryProxyView(APIView):
 
 class SchedulingProxyView(APIView):
     """
-    Proxy for scheduling service endpoints.
-    Forwards requests to the scheduling service at SCHEDULING_SERVICE_URL.
+    Proxy para los endpoints del servicio de eventos (scheduling).
+    Reenvía las solicitudes al servicio de scheduling definido en SCHEDULING_SERVICE_URL.
+
+    Soporta una "whitelist" (configurable mediante la variable de settings
+    `SCHEDULING_PUBLIC_PATHS`) con rutas públicas que no requieren autenticación.
     """
     permission_classes = [IsAuthenticated]
 
     def dispatch(self, request, *args, **kwargs):
+        # Guardamos la ruta proxy para que get_permissions pueda decidir
+        # si este endpoint es público o requiere autenticación.
         path = kwargs.get('path', '')
+        self.proxy_path = path or ''
         request.method_name = request.method.lower()
         return super().dispatch(request, *args, **kwargs)
+
+    def get_permissions(self):
+        # Rutas públicas configurables desde settings. Por defecto:
+        # 'future-activity' y 'scheduled-events'
+        public_paths = getattr(settings, 'SCHEDULING_PUBLIC_PATHS', [
+            'future-activity',
+            'scheduled-events',
+        ])
+
+        # Normalizamos la ruta y comprobamos si comienza con alguna pública
+        path = getattr(self, 'proxy_path', '').lstrip('/')
+        for p in public_paths:
+            if path == p or path.startswith(p + '/') or path.startswith(p + '?'):
+                return [AllowAny()]
+
+        return [IsAuthenticated()]
 
     def get(self, request, path=''):
         return forward_request_to_backend(request, settings.SCHEDULING_SERVICE_URL, path)

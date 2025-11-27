@@ -176,3 +176,11 @@ CORS_ALLOWED_ORIGINS = [
 MANAGEMENT_SERVICE_URL = 'http://localhost:8001/api'
 REPOSITORY_SERVICE_URL = 'http://localhost:8002/api'
 SCHEDULING_SERVICE_URL = 'http://localhost:8003/api'
+
+# Rutas públicas del servicio de scheduling que no requieren autenticación
+# Estas rutas son relativas a la ruta proxy del gateway (por ejemplo,
+# 'future-activity' corresponde a '/event/future-activity/' en el gateway).
+SCHEDULING_PUBLIC_PATHS = [
+    'future-activity',
+    'scheduled-events',
+]
