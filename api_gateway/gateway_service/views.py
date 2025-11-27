@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 import requests
 from django.conf import settings
 from .serializers import UserLoginSerializer, UserRegisterSerializer, UserSerializer
@@ -63,6 +64,41 @@ class UserDetailView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LogoutView(APIView):
+    """
+    Logout endpoint that invalidates the refresh token.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data.get('refresh')
+            if not refresh_token:
+                return Response(
+                    {'error': 'Token de refresco requerido'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Create RefreshToken instance and add to blacklist
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            
+            return Response(
+                {'detail': 'Sesión cerrada exitosamente'},
+                status=status.HTTP_200_OK
+            )
+        except TokenError as e:
+            return Response(
+                {'error': 'Token inválido o expirado'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Error al cerrar sesión: {str(e)}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 # ============================================================================

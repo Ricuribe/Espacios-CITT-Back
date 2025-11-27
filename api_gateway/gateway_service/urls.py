@@ -8,6 +8,7 @@ urlpatterns = [
     path('auth/login/', views.LoginView.as_view(), name='login'),
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/me/', views.UserDetailView.as_view(), name='user-detail'),
+    path('auth/logout/', views.LogoutView.as_view(), name='logout'),
 
     # Management Service Proxy (workspaces and schedules)
     re_path(r'^manage/(?P<path>.*)', views.ManagementProxyView.as_view(), name='manage-proxy'),
