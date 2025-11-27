@@ -66,6 +66,34 @@ class UserDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class RefreshTokenView(APIView):
+    """
+    Endpoint para refrescar el token de acceso usando un token de refresco.
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response(
+                {'error': 'Token de refresco requerido'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+            
+            return Response(
+                {'access': access_token},
+                status=status.HTTP_200_OK
+            )
+        except TokenError as e:
+            return Response(
+                {'error': 'Token inválido o expirado'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
 class LogoutView(APIView):
     """
     Endpoint de cierre de sesión que invalida el token de refresco.
