@@ -37,6 +37,8 @@ pip install -r requirements.txt
 
 **Para este punto debería estar creada las bases de datos "espaciosCITT" y "memoriasCITT" en Postgres antes de esta parte, en AWS, ya están creadas**
 
+**RECORDATORIO: Los archivos de entorno .env deben ir ubicado en sus respectivas carpetas del backend (junto a manage.py)**
+
 -----
 
 ## ☁️ Guía de Ejecución: Arquitectura Híbrida (Local vs AWS)
