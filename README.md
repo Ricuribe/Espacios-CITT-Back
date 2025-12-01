@@ -2,6 +2,8 @@
 
 Backend del proyecto "Gestión de espacios y repositorio de memorias CITT"
 
+<small> Proyecto diseñado para su funcionamiento de forma local
+
 ## 📚 Documentación
 
 **[👉 Ve a la carpeta `docs/` para la documentación completa](docs/INDEX.md)**
