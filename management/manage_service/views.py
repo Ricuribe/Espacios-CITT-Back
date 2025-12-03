@@ -117,7 +117,8 @@ class WorkspaceResourceViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class EventsManagementViewSet(viewsets.ViewSet):
     """
     ViewSet para gestionar y moderar eventos dentro del sistema.
@@ -162,8 +163,8 @@ class EventsManagementViewSet(viewsets.ViewSet):
             events = events.filter(eventdetail__event_type__icontains=event_type)
         if workspace_id:
             events = events.filter(eventspace__workspace__id=workspace_id[0])
-        if workspace_id.length > 1:
-            events = events.filter(eventspace__workspace__id__in=workspace_id).distinct()
+        #if workspace_id.length > 1:
+        #    events = events.filter(eventspace__workspace__id__in=workspace_id).distinct()
 
         serializer = EventSerializer(events, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -193,10 +194,10 @@ class EventsManagementViewSet(viewsets.ViewSet):
             event.status = new_status
             event.save()
             
-            if new_status == StatusEvent.REJECT:
+            if new_status == StatusEvent.REJECT or new_status == StatusEvent.CANCELL:
                 reason_text = request.data.get("reason", "")
                 RejectReason.objects.update_or_create(event=event, defaults={"reason": reason_text})
-                return Response({"message": "Evento rechazado con motivo registrado."})
+                return Response({"message": "Evento cancelado con motivo registrado."})
             
             return Response({"message": "Estado del evento actualizado correctamente."})
         return Response({"error": "Estado inválido."}, status=status.HTTP_400_BAD_REQUEST)
@@ -216,4 +217,24 @@ class EventsManagementViewSet(viewsets.ViewSet):
         event.save()
         return Response({"message": "Duración del evento actualizada correctamente."})
     
+    # Actualizar un campo o todos los campos de Evento y/o los detalles del evento
+    def update(self, request, pk=None):
+        event = get_object_or_404(Event, pk=pk)
+        event_serializer = EventSerializer(event, data=request.data, partial=True)
+        
+        if event_serializer.is_valid():
+            event_serializer.save()
+            
+            detail_data = request.data.get("detail", None)
+            if detail_data:
+                event_detail = get_object_or_404(EventDetail, event=event)
+                event_detail_serializer = EventDetailSerializer(event_detail, data=detail_data, partial=True)
+                if event_detail_serializer.is_valid():
+                    event_detail_serializer.save()
+                else:
+                    return Response(event_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response(event_serializer.data)
+        
+        return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

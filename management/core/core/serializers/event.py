@@ -20,7 +20,8 @@ class EventSerializer(serializers.ModelSerializer):
             'created_by_username',
             'form_public_link',
             'form_edit_link',
-            'create_invitation'
+            'create_invitation',
+            'status',
         ]
         read_only_fields = ['form_public_link', 'form_edit_link']
 
