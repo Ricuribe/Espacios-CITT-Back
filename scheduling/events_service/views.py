@@ -3,13 +3,38 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from core.models import Event, Workspace, EventSpace, StatusEvent
+from core.models import Event, Workspace, EventSpace, StatusEvent, EventDetail
 from core.serializers import EventSerializer, EventDetailSerializer, EventSpaceSerializer
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .services.google_forms import create_event_form
+
+
+def _enrich_event_data(event_data, event_instance):
+    """
+    Enriquece los datos del evento con información adicional de EventDetail.
+    Elimina campos sensibles y agrega descripción, tipo de evento y email del creador.
+    """
+    # Obtener EventDetail si existe
+    try:
+        event_detail = EventDetail.objects.get(event=event_instance)
+        event_data['event_type'] = event_detail.event_type
+        event_data['description'] = event_detail.description
+    except EventDetail.DoesNotExist:
+        event_data['event_type'] = None
+        event_data['description'] = None
+    
+    # Agregar email del usuario creador
+    event_data['created_by_email'] = event_instance.created_by.email if event_instance.created_by else None
+    
+    # Eliminar campos sensibles
+    event_data.pop('created_by', None)
+    event_data.pop('created_by_username', None)
+    event_data.pop('form_edit_link', None)
+    
+    return event_data
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -192,8 +217,13 @@ def get_scheduled_events(request):
         )
     
     events = events.order_by('start_datetime')
+    events_data = EventSerializer(events, many=True).data
+    
+    # Enriquecer datos de cada evento
+    for event_data, event_instance in zip(events_data, events):
+        _enrich_event_data(event_data, event_instance)
 
     return Response({
-        'events': EventSerializer(events, many=True).data
+        'events': events_data
     })
 
